@@ -1,0 +1,8 @@
+---
+# defaults file for ansible-role-docker
+
+docker_install_url: https://get.docker.com
+docker_install_channel: stable #stable|test
+docker_install_mirror: "" #Aliyun|AzureChinaCloud
+docker_repo_file: docker-ce.repo
+docker_download_url: https://download.docker.com

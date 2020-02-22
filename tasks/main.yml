@@ -1,0 +1,40 @@
+---
+- name: Check if Docker is already present.
+  command: which docker
+  failed_when: no
+  changed_when: no
+  register: check_docker
+
+- name: install docker
+  set_fact:
+    docker_install: true
+  when: check_docker.rc == 1
+
+- name: install docker
+  block:
+    - name: download install shell
+      get_url:
+        url: "{{ docker_install_url }}"
+        dest: /tmp/install_docker.sh
+        mode: 755
+
+    - name: install docker
+      command: /tmp/install_docker.sh {{ docker_install_mirror | default('') }}
+      environment:
+        CHANNEL: "{{ docker_install_channel | default('stable') }}"
+        DOWNLOAD_URL: "{{ docker_download_url | default('') }}"
+        REPO_FILE: "{{ docker_repo_file | default('') }}"
+  when: docker_install | default(false) | bool
+
+- name: Make sure Docker CE is the version specified.
+  package:
+    name: "docker-ce={{ docker_version }}"
+    state: present
+    force: true
+  when: docker_version is defined
+
+- name: Ensure Docker is started.
+  service:
+    name: docker
+    state: started
+    enabled: true
