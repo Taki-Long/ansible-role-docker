@@ -25,8 +25,6 @@ jobs:
           - name: debian
             tag: stretch
           - name: centos
-            tag: 8
-          - name: centos
             tag: 7
     steps:
       - uses: actions/checkout@v2
