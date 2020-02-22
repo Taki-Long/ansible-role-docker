@@ -28,12 +28,23 @@ jobs:
             tag: 7
     steps:
       - uses: actions/checkout@v2
+
       - name: Set up Python 3.7
         uses: actions/setup-python@v1.1.1
         with:
           python-version: 3.7
+
+      - name: cache pip
+        uses: actions/cache@v1
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Install dependencies
         run: pip install -r requirements.txt
+
       - name: Test with molecule
         run: molecule test
         env:
